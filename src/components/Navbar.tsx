@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 
 export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
   const navLinks = [
     { name: "Home", path: "/" },
     { name: "About", path: "/about" },
@@ -12,19 +14,23 @@ export default function Navbar() {
   ];
 
   return (
-    // 'justify-between' forces the logo and nav to opposite ends
-    // 'px-6' or 'px-12' adds space on the sides for mobile
-    <nav className="flex justify-between items-center py-6 px-6 md:px-12 bg-white shadow-sm">
+    <nav className="flex items-center justify-between py-6 px-6 md:px-12 bg-white shadow-sm">
       <div className="text-blue-600 font-bold text-xl">My Professional Site</div>
-      
-      {/* Navigation Links */}
-      <div className="flex gap-4 md:gap-8">
+
+      {/* Hamburger Button - Visible only on mobile */}
+      <button className="md:hidden text-2xl" onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? '✕' : '☰'}
+      </button>
+
+      {/* Nav Links - Responsive logic */}
+      <div className={`md:flex gap-8 ${isOpen ? 'absolute top-20 left-0 w-full bg-white p-6 flex-col shadow-lg z-50' : 'hidden md:flex'}`}>
         {navLinks.map((link) => (
-          <NavLink 
-            key={link.path} 
+          <NavLink
+            key={link.path}
             to={link.path}
+            onClick={() => setIsOpen(false)} // Close menu when link is clicked
             className={({ isActive }) => 
-              `hover:text-blue-600 transition ${isActive ? "text-blue-600 font-bold" : "text-gray-600"}`
+              `block ${isActive ? "text-blue-600 font-bold" : "text-gray-600"} hover:text-blue-600 transition`
             }
           >
             {link.name}
